@@ -1,31 +1,63 @@
-// Persistência local simples (protótipo). Substituir por Firebase futuramente.
+// Persistência local simples (protótipo). Substituir por Lovable Cloud futuramente.
 import { useEffect, useState } from "react";
 
 export type Contact = {
   id: string;
   name: string;
   phone: string;
-  relation: string; // grau de proximidade
-  priority: number; // 1 = primeiro a ser avisado
+  relation: string;
+  priority: number;
 };
+
+export type DeviceComponent = "gloss" | "tracker" | "sos";
 
 export type DeviceState = {
   trackingCode: string | null;
   status: "disconnected" | "searching" | "connected";
   battery: number; // 0-100
+  solarCharging: boolean;
   lastSync: number | null;
+  components: Record<DeviceComponent, boolean>; // pareados
 };
 
 export type Settings = {
   silentMode: boolean;
   autoShareLocation: boolean;
   pushNotifications: boolean;
+  continuousTracking: boolean;
+};
+
+export type LocationPoint = {
+  ts: number;
+  lat: number;
+  lng: number;
+  label?: string;
+};
+
+export type Incident = {
+  id: string;
+  createdAt: number;
+  type: "assedio" | "perseguicao" | "violencia" | "outro";
+  description: string;
+  location: { lat: number; lng: number; label?: string } | null;
+  aggressor: string;
+  notes: string;
+};
+
+export type SosEvent = {
+  id: string;
+  ts: number;
+  source: "device" | "app";
+  resolved: boolean;
 };
 
 const KEYS = {
   device: "safeher.device",
   contacts: "safeher.contacts",
   settings: "safeher.settings",
+  locations: "safeher.locations",
+  incidents: "safeher.incidents",
+  sos: "safeher.sos",
 } as const;
 
 function read<T>(key: string, fallback: T): T {
@@ -44,7 +76,6 @@ function write<T>(key: string, value: T) {
   window.dispatchEvent(new StorageEvent("storage", { key }));
 }
 
-// React hook utilitário
 function usePersistent<T>(key: string, fallback: T): [T, (v: T | ((p: T) => T)) => void] {
   const [value, setValue] = useState<T>(fallback);
   useEffect(() => {
@@ -71,7 +102,9 @@ export const useDevice = () =>
     trackingCode: null,
     status: "disconnected",
     battery: 0,
+    solarCharging: false,
     lastSync: null,
+    components: { gloss: false, tracker: false, sos: false },
   });
 
 export const useContacts = () => usePersistent<Contact[]>(KEYS.contacts, []);
@@ -81,7 +114,12 @@ export const useSettings = () =>
     silentMode: false,
     autoShareLocation: true,
     pushNotifications: true,
+    continuousTracking: true,
   });
+
+export const useLocations = () => usePersistent<LocationPoint[]>(KEYS.locations, []);
+export const useIncidents = () => usePersistent<Incident[]>(KEYS.incidents, []);
+export const useSosEvents = () => usePersistent<SosEvent[]>(KEYS.sos, []);
 
 export function uid() {
   return Math.random().toString(36).slice(2, 10);

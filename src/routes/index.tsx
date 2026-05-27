@@ -1,11 +1,26 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { useDevice } from "@/lib/storage";
-import { Bluetooth, BatteryFull, MapPin, RefreshCw, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { useDevice, useLocations, useSosEvents, uid } from "@/lib/storage";
+import {
+  Bluetooth,
+  BatteryFull,
+  Sun,
+  KeyRound,
+  Radio,
+  Sparkles,
+  CheckCircle2,
+  XCircle,
+  Loader2,
+  ShieldAlert,
+  MapPin,
+  RefreshCw,
+  BookOpen,
+} from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -14,7 +29,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "SafeHer conecta seu dispositivo de segurança ao app, com SOS rápido, rastreio em tempo real e contatos de emergência.",
+          "SafeHer conecta seu dispositivo físico de segurança (gloss + chaveiros) com rastreio contínuo e SOS externo ao app.",
       },
     ],
   }),
@@ -23,16 +38,31 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const [device, setDevice] = useDevice();
+  const [, setLocations] = useLocations();
+  const [sos, setSos] = useSosEvents();
   const [code, setCode] = useState(device.trackingCode ?? "");
 
-  // Simula bateria do dispositivo quando conectado
+  const connected = device.status === "connected";
+
+  // Sincronização contínua simulada quando conectado
   useEffect(() => {
-    if (device.status !== "connected") return;
+    if (!connected) return;
     const id = setInterval(() => {
-      setDevice((d) => ({ ...d, lastSync: Date.now() }));
-    }, 15000);
+      setDevice((d) => ({
+        ...d,
+        lastSync: Date.now(),
+        // Carga solar lenta (+1 a cada ciclo, máx 100)
+        battery: d.solarCharging ? Math.min(100, d.battery + 1) : d.battery,
+      }));
+      setLocations((arr) => {
+        const last = arr[arr.length - 1];
+        const lat = (last?.lat ?? -23.5505) + (Math.random() - 0.5) * 0.0008;
+        const lng = (last?.lng ?? -46.6333) + (Math.random() - 0.5) * 0.0008;
+        return [...arr.slice(-199), { ts: Date.now(), lat, lng }];
+      });
+    }, 5000);
     return () => clearInterval(id);
-  }, [device.status, setDevice]);
+  }, [connected, setDevice, setLocations]);
 
   const connect = () => {
     if (!code.trim()) return;
@@ -42,8 +72,11 @@ function Home() {
         ...d,
         status: "connected",
         battery: 78,
+        solarCharging: true,
         lastSync: Date.now(),
+        components: { gloss: true, tracker: true, sos: true },
       }));
+      toast.success("Dispositivo SafeHer conectado");
     }, 1600);
   };
 
@@ -58,10 +91,51 @@ function Home() {
     setDevice((d) => ({ ...d, status: "disconnected" }));
   };
 
+  // Simula um botão SOS físico (apenas para demonstração)
+  const simulateDeviceSos = () => {
+    setSos((arr) => [
+      ...arr,
+      { id: uid(), ts: Date.now(), source: "device", resolved: false },
+    ]);
+    toast.error("SOS recebido do dispositivo físico");
+  };
+
+  const activeSos = sos.find((s) => !s.resolved);
+
   return (
-    <AppShell title="Olá 👋" subtitle="Você está protegida. Confira o status do seu dispositivo.">
-      {/* Status do dispositivo */}
-      <Card className="p-5 rounded-3xl border-border/60 shadow-sm">
+    <AppShell
+      title="Olá 👋"
+      subtitle="Seu dispositivo SafeHer é o seu principal escudo. O app monitora e complementa."
+    >
+      {activeSos ? (
+        <Card className="p-4 rounded-3xl border-destructive/40 bg-destructive/10">
+          <div className="flex items-center gap-3">
+            <div className="size-11 rounded-2xl bg-destructive text-destructive-foreground grid place-items-center animate-pulse">
+              <ShieldAlert className="size-5" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-destructive">SOS ATIVO</p>
+              <p className="text-xs text-destructive/80">
+                Acionado pelo botão físico · contatos e localização notificados
+              </p>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() =>
+                setSos((arr) =>
+                  arr.map((s) => (s.id === activeSos.id ? { ...s, resolved: true } : s))
+                )
+              }
+            >
+              Encerrar
+            </Button>
+          </div>
+        </Card>
+      ) : null}
+
+      {/* Status do dispositivo físico */}
+      <Card className={`${activeSos ? "mt-4" : ""} p-5 rounded-3xl border-border/60 shadow-sm`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="size-11 rounded-2xl bg-primary/10 grid place-items-center">
@@ -73,11 +147,14 @@ function Home() {
             </div>
           </div>
           <div className="text-right">
-            <div className="flex items-center gap-1 text-sm font-medium">
+            <div className="flex items-center gap-1 text-sm font-medium justify-end">
               <BatteryFull className="size-4 text-primary" aria-hidden />
-              {device.status === "connected" ? `${device.battery}%` : "—"}
+              {connected ? `${device.battery}%` : "—"}
             </div>
-            <p className="text-[11px] text-muted-foreground">bateria</p>
+            <p className="text-[11px] text-muted-foreground flex items-center gap-1 justify-end">
+              <Sun className="size-3 text-amber-500" />
+              {device.solarCharging && connected ? "carga solar ativa" : "bateria"}
+            </p>
           </div>
         </div>
 
@@ -123,30 +200,56 @@ function Home() {
         )}
       </Card>
 
-      {/* Mapa (placeholder) */}
-      <Card className="mt-4 p-0 rounded-3xl overflow-hidden border-border/60">
-        <div className="relative h-44 bg-gradient-to-br from-accent via-secondary to-primary/20">
-          <div className="absolute inset-0 grid place-items-center">
-            <div className="text-center">
-              <div className="mx-auto size-12 rounded-full bg-primary text-primary-foreground grid place-items-center shadow-lg">
-                <MapPin className="size-6" aria-hidden />
-              </div>
-              <p className="mt-2 text-sm font-medium">Sua localização atual</p>
-              <p className="text-xs text-muted-foreground">
-                {device.status === "connected"
-                  ? "Compartilhamento ativo com contatos"
-                  : "Conecte o dispositivo para ativar"}
-              </p>
-            </div>
-          </div>
-        </div>
-      </Card>
-
-      {/* Atalhos rápidos */}
-      <div className="mt-4 grid grid-cols-2 gap-3">
-        <QuickTile title="Compartilhar localização" desc="Enviar agora aos contatos" />
-        <QuickTile title="Modo silencioso" desc="SOS discreto, sem som" />
+      {/* Componentes do kit */}
+      <div className="mt-4 grid grid-cols-3 gap-3">
+        <ComponentTile
+          icon={<Sparkles className="size-5" />}
+          label="Gloss"
+          paired={device.components.gloss && connected}
+        />
+        <ComponentTile
+          icon={<Radio className="size-5" />}
+          label="Rastreador"
+          paired={device.components.tracker && connected}
+        />
+        <ComponentTile
+          icon={<KeyRound className="size-5" />}
+          label="Botão SOS"
+          paired={device.components.sos && connected}
+        />
       </div>
+
+      <p className="mt-3 text-[11px] text-muted-foreground text-center">
+        O botão SOS funciona <strong>sem o celular</strong>. GPS sempre ativo.
+      </p>
+
+      {/* Atalhos */}
+      <div className="mt-4 grid grid-cols-2 gap-3">
+        <Link to="/location">
+          <Card className="p-4 rounded-2xl border-border/60 h-full">
+            <MapPin className="size-5 text-primary" />
+            <p className="text-sm font-semibold mt-2">Localização em tempo real</p>
+            <p className="text-xs text-muted-foreground">Ver mapa e histórico</p>
+          </Card>
+        </Link>
+        <Link to="/incidents">
+          <Card className="p-4 rounded-2xl border-border/60 h-full">
+            <BookOpen className="size-5 text-primary" />
+            <p className="text-sm font-semibold mt-2">Registrar ocorrência</p>
+            <p className="text-xs text-muted-foreground">Relato com data e local</p>
+          </Card>
+        </Link>
+      </div>
+
+      {/* Simulador do botão físico (apenas para demonstração no protótipo) */}
+      {connected && !activeSos ? (
+        <button
+          onClick={simulateDeviceSos}
+          className="mt-4 w-full text-[11px] text-muted-foreground underline underline-offset-2"
+        >
+          Simular acionamento do botão SOS físico (protótipo)
+        </button>
+      ) : null}
     </AppShell>
   );
 }
@@ -171,11 +274,28 @@ function StatusBadge({ status }: { status: "disconnected" | "searching" | "conne
   );
 }
 
-function QuickTile({ title, desc }: { title: string; desc: string }) {
+function ComponentTile({
+  icon,
+  label,
+  paired,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  paired: boolean;
+}) {
   return (
-    <Card className="p-4 rounded-2xl border-border/60">
-      <p className="text-sm font-semibold">{title}</p>
-      <p className="text-xs text-muted-foreground mt-1">{desc}</p>
+    <Card className="p-3 rounded-2xl border-border/60 text-center">
+      <div
+        className={`mx-auto size-10 rounded-2xl grid place-items-center ${
+          paired ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+        }`}
+      >
+        {icon}
+      </div>
+      <p className="mt-2 text-xs font-medium">{label}</p>
+      <p className={`text-[10px] ${paired ? "text-emerald-600" : "text-muted-foreground"}`}>
+        {paired ? "pareado" : "—"}
+      </p>
     </Card>
   );
 }

@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SosRouteImport } from './routes/sos'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as LocationRouteImport } from './routes/location'
 import { Route as InfoRouteImport } from './routes/info'
+import { Route as IncidentsRouteImport } from './routes/incidents'
 import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -25,9 +27,19 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LocationRoute = LocationRouteImport.update({
+  id: '/location',
+  path: '/location',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InfoRoute = InfoRouteImport.update({
   id: '/info',
   path: '/info',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IncidentsRoute = IncidentsRouteImport.update({
+  id: '/incidents',
+  path: '/incidents',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactsRoute = ContactsRouteImport.update({
@@ -44,14 +56,18 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/contacts': typeof ContactsRoute
+  '/incidents': typeof IncidentsRoute
   '/info': typeof InfoRoute
+  '/location': typeof LocationRoute
   '/settings': typeof SettingsRoute
   '/sos': typeof SosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/contacts': typeof ContactsRoute
+  '/incidents': typeof IncidentsRoute
   '/info': typeof InfoRoute
+  '/location': typeof LocationRoute
   '/settings': typeof SettingsRoute
   '/sos': typeof SosRoute
 }
@@ -59,22 +75,48 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/contacts': typeof ContactsRoute
+  '/incidents': typeof IncidentsRoute
   '/info': typeof InfoRoute
+  '/location': typeof LocationRoute
   '/settings': typeof SettingsRoute
   '/sos': typeof SosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/contacts' | '/info' | '/settings' | '/sos'
+  fullPaths:
+    | '/'
+    | '/contacts'
+    | '/incidents'
+    | '/info'
+    | '/location'
+    | '/settings'
+    | '/sos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/contacts' | '/info' | '/settings' | '/sos'
-  id: '__root__' | '/' | '/contacts' | '/info' | '/settings' | '/sos'
+  to:
+    | '/'
+    | '/contacts'
+    | '/incidents'
+    | '/info'
+    | '/location'
+    | '/settings'
+    | '/sos'
+  id:
+    | '__root__'
+    | '/'
+    | '/contacts'
+    | '/incidents'
+    | '/info'
+    | '/location'
+    | '/settings'
+    | '/sos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ContactsRoute: typeof ContactsRoute
+  IncidentsRoute: typeof IncidentsRoute
   InfoRoute: typeof InfoRoute
+  LocationRoute: typeof LocationRoute
   SettingsRoute: typeof SettingsRoute
   SosRoute: typeof SosRoute
 }
@@ -95,11 +137,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/location': {
+      id: '/location'
+      path: '/location'
+      fullPath: '/location'
+      preLoaderRoute: typeof LocationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/info': {
       id: '/info'
       path: '/info'
       fullPath: '/info'
       preLoaderRoute: typeof InfoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/incidents': {
+      id: '/incidents'
+      path: '/incidents'
+      fullPath: '/incidents'
+      preLoaderRoute: typeof IncidentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contacts': {
@@ -122,7 +178,9 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ContactsRoute: ContactsRoute,
+  IncidentsRoute: IncidentsRoute,
   InfoRoute: InfoRoute,
+  LocationRoute: LocationRoute,
   SettingsRoute: SettingsRoute,
   SosRoute: SosRoute,
 }

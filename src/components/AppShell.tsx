@@ -1,18 +1,18 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Home, ShieldAlert, Users, BookOpen, Settings as SettingsIcon } from "lucide-react";
+import { Home, MapPin, FileText, Users, Settings as SettingsIcon, ShieldAlert } from "lucide-react";
 import type { ReactNode } from "react";
 
 type Tab = {
-  to: "/" | "/sos" | "/contacts" | "/info" | "/settings";
+  to: "/" | "/location" | "/incidents" | "/contacts" | "/settings";
   label: string;
   icon: typeof Home;
 };
 
 const TABS: Tab[] = [
   { to: "/", label: "Início", icon: Home },
-  { to: "/sos", label: "SOS", icon: ShieldAlert },
+  { to: "/location", label: "Localização", icon: MapPin },
+  { to: "/incidents", label: "Ocorrências", icon: FileText },
   { to: "/contacts", label: "Contatos", icon: Users },
-  { to: "/info", label: "Informações", icon: BookOpen },
   { to: "/settings", label: "Ajustes", icon: SettingsIcon },
 ];
 
@@ -53,27 +53,20 @@ export function AppShell({
         <ul className="grid grid-cols-5">
           {TABS.map(({ to, label, icon: Icon }) => {
             const active = pathname === to;
-            const isSos = to === "/sos";
             return (
               <li key={to}>
                 <Link
                   to={to}
                   className={`flex flex-col items-center justify-center gap-1 py-3 text-[11px] font-medium transition-colors ${
                     active
-                      ? isSos
-                        ? "text-destructive"
-                        : "text-primary"
+                      ? "text-primary"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                   aria-label={label}
                 >
                   <span
                     className={`grid place-items-center size-9 rounded-full ${
-                      isSos
-                        ? "bg-destructive text-destructive-foreground shadow-lg shadow-destructive/30"
-                        : active
-                          ? "bg-primary/10"
-                          : ""
+                      active ? "bg-primary/10" : ""
                     }`}
                   >
                     <Icon className="size-5" aria-hidden />
