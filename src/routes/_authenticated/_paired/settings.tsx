@@ -65,6 +65,18 @@ function SettingsPage() {
 
   return (
     <AppShell title="Ajustes" subtitle="Personalize sua experiência e segurança.">
+      <Card className="p-4 rounded-3xl border-border/60 mb-4">
+        <div className="flex items-center gap-3">
+          <div className="size-12 rounded-2xl bg-primary/15 text-primary grid place-items-center">
+            <UserIcon className="size-6" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold truncate">{profile?.full_name || "Sua conta"}</p>
+            <p className="text-xs text-muted-foreground truncate">{profile?.email || user?.email}</p>
+          </div>
+        </div>
+      </Card>
+
       <Card className="p-4 rounded-3xl border-border/60 divide-y divide-border/60">
         <Row
           icon={<Radio className="size-5" />}
@@ -156,6 +168,10 @@ function SettingsPage() {
           </div>
         </div>
       </Card>
+
+      <Button onClick={handleSignOut} variant="outline" className="w-full h-12 rounded-2xl mt-4">
+        <LogOut className="size-4" /> Sair da conta
+      </Button>
     </AppShell>
   );
 }
