@@ -14,7 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      devices: {
+        Row: {
+          battery: number
+          id: string
+          paired_at: string
+          status: string
+          tracking_code: string
+          user_id: string
+        }
+        Insert: {
+          battery?: number
+          id?: string
+          paired_at?: string
+          status?: string
+          tracking_code: string
+          user_id: string
+        }
+        Update: {
+          battery?: number
+          id?: string
+          paired_at?: string
+          status?: string
+          tracking_code?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          birth_date: string | null
+          cpf: string
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string
+          updated_at: string
+        }
+        Insert: {
+          birth_date?: string | null
+          cpf?: string
+          created_at?: string
+          email?: string
+          full_name?: string
+          id: string
+          phone?: string
+          updated_at?: string
+        }
+        Update: {
+          birth_date?: string | null
+          cpf?: string
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
