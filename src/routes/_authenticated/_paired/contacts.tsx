@@ -23,7 +23,7 @@ import {
 import { useContacts, uid, type Contact } from "@/lib/storage";
 import { Plus, Trash2, Pencil, Phone, Star } from "lucide-react";
 
-export const Route = createFileRoute("/contacts")({
+export const Route = createFileRoute("/_authenticated/_paired/contacts")({
   head: () => ({ meta: [{ title: "Contatos — SafeHer" }] }),
   component: ContactsPage,
 });

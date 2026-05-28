@@ -11,7 +11,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-export const Route = createFileRoute("/info")({
+export const Route = createFileRoute("/_authenticated/_paired/info")({
   head: () => ({ meta: [{ title: "Informações — SafeHer" }] }),
   component: InfoPage,
 });

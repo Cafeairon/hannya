@@ -10,7 +10,7 @@ import { useIncidents, useLocations, uid, type Incident } from "@/lib/storage";
 import { FileText, Plus, Trash2, Download, MapPin, Clock } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/incidents")({
+export const Route = createFileRoute("/_authenticated/_paired/incidents")({
   head: () => ({ meta: [{ title: "Ocorrências — SafeHer" }] }),
   component: IncidentsPage,
 });

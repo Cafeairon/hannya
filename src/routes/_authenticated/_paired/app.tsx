@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/_paired/app")({
   head: () => ({
     meta: [
       { title: "SafeHer — Segurança feminina urbana" },

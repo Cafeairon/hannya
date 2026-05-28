@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { useDevice, useSettings } from "@/lib/storage";
 import { Bell, EyeOff, MapPin, Lock, Info, Sun, Radio, BookOpen, ChevronRight } from "lucide-react";
 
-export const Route = createFileRoute("/settings")({
+export const Route = createFileRoute("/_authenticated/_paired/settings")({
   head: () => ({ meta: [{ title: "Ajustes — SafeHer" }] }),
   component: SettingsPage,
 });
