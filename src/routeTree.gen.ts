@@ -9,36 +9,37 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as LocationRouteImport } from './routes/location'
-import { Route as InfoRouteImport } from './routes/info'
-import { Route as IncidentsRouteImport } from './routes/incidents'
-import { Route as ContactsRouteImport } from './routes/contacts'
+import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
+import { Route as AuthenticatedPairedRouteImport } from './routes/_authenticated/_paired'
+import { Route as AuthenticatedPairedSettingsRouteImport } from './routes/_authenticated/_paired/settings'
+import { Route as AuthenticatedPairedLocationRouteImport } from './routes/_authenticated/_paired/location'
+import { Route as AuthenticatedPairedInfoRouteImport } from './routes/_authenticated/_paired/info'
+import { Route as AuthenticatedPairedIncidentsRouteImport } from './routes/_authenticated/_paired/incidents'
+import { Route as AuthenticatedPairedContactsRouteImport } from './routes/_authenticated/_paired/contacts'
+import { Route as AuthenticatedPairedAppRouteImport } from './routes/_authenticated/_paired/app'
 
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LocationRoute = LocationRouteImport.update({
-  id: '/location',
-  path: '/location',
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const InfoRoute = InfoRouteImport.update({
-  id: '/info',
-  path: '/info',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IncidentsRoute = IncidentsRouteImport.update({
-  id: '/incidents',
-  path: '/incidents',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactsRoute = ContactsRouteImport.update({
-  id: '/contacts',
-  path: '/contacts',
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -46,97 +47,172 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedPairedRoute = AuthenticatedPairedRouteImport.update({
+  id: '/_paired',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedPairedSettingsRoute =
+  AuthenticatedPairedSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedPairedRoute,
+  } as any)
+const AuthenticatedPairedLocationRoute =
+  AuthenticatedPairedLocationRouteImport.update({
+    id: '/location',
+    path: '/location',
+    getParentRoute: () => AuthenticatedPairedRoute,
+  } as any)
+const AuthenticatedPairedInfoRoute = AuthenticatedPairedInfoRouteImport.update({
+  id: '/info',
+  path: '/info',
+  getParentRoute: () => AuthenticatedPairedRoute,
+} as any)
+const AuthenticatedPairedIncidentsRoute =
+  AuthenticatedPairedIncidentsRouteImport.update({
+    id: '/incidents',
+    path: '/incidents',
+    getParentRoute: () => AuthenticatedPairedRoute,
+  } as any)
+const AuthenticatedPairedContactsRoute =
+  AuthenticatedPairedContactsRouteImport.update({
+    id: '/contacts',
+    path: '/contacts',
+    getParentRoute: () => AuthenticatedPairedRoute,
+  } as any)
+const AuthenticatedPairedAppRoute = AuthenticatedPairedAppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => AuthenticatedPairedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/contacts': typeof ContactsRoute
-  '/incidents': typeof IncidentsRoute
-  '/info': typeof InfoRoute
-  '/location': typeof LocationRoute
-  '/settings': typeof SettingsRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/welcome': typeof WelcomeRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/app': typeof AuthenticatedPairedAppRoute
+  '/contacts': typeof AuthenticatedPairedContactsRoute
+  '/incidents': typeof AuthenticatedPairedIncidentsRoute
+  '/info': typeof AuthenticatedPairedInfoRoute
+  '/location': typeof AuthenticatedPairedLocationRoute
+  '/settings': typeof AuthenticatedPairedSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/contacts': typeof ContactsRoute
-  '/incidents': typeof IncidentsRoute
-  '/info': typeof InfoRoute
-  '/location': typeof LocationRoute
-  '/settings': typeof SettingsRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/welcome': typeof WelcomeRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/app': typeof AuthenticatedPairedAppRoute
+  '/contacts': typeof AuthenticatedPairedContactsRoute
+  '/incidents': typeof AuthenticatedPairedIncidentsRoute
+  '/info': typeof AuthenticatedPairedInfoRoute
+  '/location': typeof AuthenticatedPairedLocationRoute
+  '/settings': typeof AuthenticatedPairedSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/contacts': typeof ContactsRoute
-  '/incidents': typeof IncidentsRoute
-  '/info': typeof InfoRoute
-  '/location': typeof LocationRoute
-  '/settings': typeof SettingsRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/welcome': typeof WelcomeRoute
+  '/_authenticated/_paired': typeof AuthenticatedPairedRouteWithChildren
+  '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
+  '/_authenticated/_paired/app': typeof AuthenticatedPairedAppRoute
+  '/_authenticated/_paired/contacts': typeof AuthenticatedPairedContactsRoute
+  '/_authenticated/_paired/incidents': typeof AuthenticatedPairedIncidentsRoute
+  '/_authenticated/_paired/info': typeof AuthenticatedPairedInfoRoute
+  '/_authenticated/_paired/location': typeof AuthenticatedPairedLocationRoute
+  '/_authenticated/_paired/settings': typeof AuthenticatedPairedSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/welcome'
+    | '/onboarding'
+    | '/app'
     | '/contacts'
     | '/incidents'
     | '/info'
     | '/location'
     | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/contacts' | '/incidents' | '/info' | '/location' | '/settings'
-  id:
-    | '__root__'
+  to:
     | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/welcome'
+    | '/onboarding'
+    | '/app'
     | '/contacts'
     | '/incidents'
     | '/info'
     | '/location'
     | '/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/reset-password'
+    | '/welcome'
+    | '/_authenticated/_paired'
+    | '/_authenticated/onboarding'
+    | '/_authenticated/_paired/app'
+    | '/_authenticated/_paired/contacts'
+    | '/_authenticated/_paired/incidents'
+    | '/_authenticated/_paired/info'
+    | '/_authenticated/_paired/location'
+    | '/_authenticated/_paired/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ContactsRoute: typeof ContactsRoute
-  IncidentsRoute: typeof IncidentsRoute
-  InfoRoute: typeof InfoRoute
-  LocationRoute: typeof LocationRoute
-  SettingsRoute: typeof SettingsRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  WelcomeRoute: typeof WelcomeRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/location': {
-      id: '/location'
-      path: '/location'
-      fullPath: '/location'
-      preLoaderRoute: typeof LocationRouteImport
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/info': {
-      id: '/info'
-      path: '/info'
-      fullPath: '/info'
-      preLoaderRoute: typeof InfoRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/incidents': {
-      id: '/incidents'
-      path: '/incidents'
-      fullPath: '/incidents'
-      preLoaderRoute: typeof IncidentsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contacts': {
-      id: '/contacts'
-      path: '/contacts'
-      fullPath: '/contacts'
-      preLoaderRoute: typeof ContactsRouteImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -146,27 +222,107 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/onboarding': {
+      id: '/_authenticated/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/_paired': {
+      id: '/_authenticated/_paired'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedPairedRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/_paired/settings': {
+      id: '/_authenticated/_paired/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedPairedSettingsRouteImport
+      parentRoute: typeof AuthenticatedPairedRoute
+    }
+    '/_authenticated/_paired/location': {
+      id: '/_authenticated/_paired/location'
+      path: '/location'
+      fullPath: '/location'
+      preLoaderRoute: typeof AuthenticatedPairedLocationRouteImport
+      parentRoute: typeof AuthenticatedPairedRoute
+    }
+    '/_authenticated/_paired/info': {
+      id: '/_authenticated/_paired/info'
+      path: '/info'
+      fullPath: '/info'
+      preLoaderRoute: typeof AuthenticatedPairedInfoRouteImport
+      parentRoute: typeof AuthenticatedPairedRoute
+    }
+    '/_authenticated/_paired/incidents': {
+      id: '/_authenticated/_paired/incidents'
+      path: '/incidents'
+      fullPath: '/incidents'
+      preLoaderRoute: typeof AuthenticatedPairedIncidentsRouteImport
+      parentRoute: typeof AuthenticatedPairedRoute
+    }
+    '/_authenticated/_paired/contacts': {
+      id: '/_authenticated/_paired/contacts'
+      path: '/contacts'
+      fullPath: '/contacts'
+      preLoaderRoute: typeof AuthenticatedPairedContactsRouteImport
+      parentRoute: typeof AuthenticatedPairedRoute
+    }
+    '/_authenticated/_paired/app': {
+      id: '/_authenticated/_paired/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AuthenticatedPairedAppRouteImport
+      parentRoute: typeof AuthenticatedPairedRoute
+    }
   }
 }
 
+interface AuthenticatedPairedRouteChildren {
+  AuthenticatedPairedAppRoute: typeof AuthenticatedPairedAppRoute
+  AuthenticatedPairedContactsRoute: typeof AuthenticatedPairedContactsRoute
+  AuthenticatedPairedIncidentsRoute: typeof AuthenticatedPairedIncidentsRoute
+  AuthenticatedPairedInfoRoute: typeof AuthenticatedPairedInfoRoute
+  AuthenticatedPairedLocationRoute: typeof AuthenticatedPairedLocationRoute
+  AuthenticatedPairedSettingsRoute: typeof AuthenticatedPairedSettingsRoute
+}
+
+const AuthenticatedPairedRouteChildren: AuthenticatedPairedRouteChildren = {
+  AuthenticatedPairedAppRoute: AuthenticatedPairedAppRoute,
+  AuthenticatedPairedContactsRoute: AuthenticatedPairedContactsRoute,
+  AuthenticatedPairedIncidentsRoute: AuthenticatedPairedIncidentsRoute,
+  AuthenticatedPairedInfoRoute: AuthenticatedPairedInfoRoute,
+  AuthenticatedPairedLocationRoute: AuthenticatedPairedLocationRoute,
+  AuthenticatedPairedSettingsRoute: AuthenticatedPairedSettingsRoute,
+}
+
+const AuthenticatedPairedRouteWithChildren =
+  AuthenticatedPairedRoute._addFileChildren(AuthenticatedPairedRouteChildren)
+
+interface AuthenticatedRouteChildren {
+  AuthenticatedPairedRoute: typeof AuthenticatedPairedRouteWithChildren
+  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedPairedRoute: AuthenticatedPairedRouteWithChildren,
+  AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ContactsRoute: ContactsRoute,
-  IncidentsRoute: IncidentsRoute,
-  InfoRoute: InfoRoute,
-  LocationRoute: LocationRoute,
-  SettingsRoute: SettingsRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  WelcomeRoute: WelcomeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

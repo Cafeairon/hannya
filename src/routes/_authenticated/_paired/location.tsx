@@ -7,7 +7,7 @@ import { MapPin, Share2, History, Radio } from "lucide-react";
 import { toast } from "sonner";
 import { useMemo } from "react";
 
-export const Route = createFileRoute("/location")({
+export const Route = createFileRoute("/_authenticated/_paired/location")({
   head: () => ({ meta: [{ title: "Localização — SafeHer" }] }),
   component: LocationPage,
 });

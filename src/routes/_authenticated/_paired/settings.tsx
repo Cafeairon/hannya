@@ -1,11 +1,16 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 import { useDevice, useSettings } from "@/lib/storage";
-import { Bell, EyeOff, MapPin, Lock, Info, Sun, Radio, BookOpen, ChevronRight } from "lucide-react";
+import { Bell, EyeOff, MapPin, Lock, Info, Sun, Radio, BookOpen, ChevronRight, LogOut, User as UserIcon } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth";
+import { toast } from "sonner";
 
-export const Route = createFileRoute("/settings")({
+export const Route = createFileRoute("/_authenticated/_paired/settings")({
   head: () => ({ meta: [{ title: "Ajustes — SafeHer" }] }),
   component: SettingsPage,
 });
@@ -13,6 +18,25 @@ export const Route = createFileRoute("/settings")({
 function SettingsPage() {
   const [settings, setSettings] = useSettings();
   const [device] = useDevice();
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState<{ full_name: string; email: string } | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("profiles")
+      .select("full_name, email")
+      .eq("id", user.id)
+      .maybeSingle()
+      .then(({ data }) => data && setProfile(data));
+  }, [user]);
+
+  const handleSignOut = async () => {
+    await signOut();
+    toast.success("Você saiu da conta");
+    navigate({ to: "/welcome", replace: true });
+  };
 
   const Row = ({
     icon,
@@ -41,6 +65,18 @@ function SettingsPage() {
 
   return (
     <AppShell title="Ajustes" subtitle="Personalize sua experiência e segurança.">
+      <Card className="p-4 rounded-3xl border-border/60 mb-4">
+        <div className="flex items-center gap-3">
+          <div className="size-12 rounded-2xl bg-primary/15 text-primary grid place-items-center">
+            <UserIcon className="size-6" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold truncate">{profile?.full_name || "Sua conta"}</p>
+            <p className="text-xs text-muted-foreground truncate">{profile?.email || user?.email}</p>
+          </div>
+        </div>
+      </Card>
+
       <Card className="p-4 rounded-3xl border-border/60 divide-y divide-border/60">
         <Row
           icon={<Radio className="size-5" />}
@@ -132,6 +168,10 @@ function SettingsPage() {
           </div>
         </div>
       </Card>
+
+      <Button onClick={handleSignOut} variant="outline" className="w-full h-12 rounded-2xl mt-4">
+        <LogOut className="size-4" /> Sair da conta
+      </Button>
     </AppShell>
   );
 }
