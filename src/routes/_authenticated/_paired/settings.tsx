@@ -1,9 +1,14 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 import { useDevice, useSettings } from "@/lib/storage";
-import { Bell, EyeOff, MapPin, Lock, Info, Sun, Radio, BookOpen, ChevronRight } from "lucide-react";
+import { Bell, EyeOff, MapPin, Lock, Info, Sun, Radio, BookOpen, ChevronRight, LogOut, User as UserIcon } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/_paired/settings")({
   head: () => ({ meta: [{ title: "Ajustes — SafeHer" }] }),
