@@ -3,13 +3,13 @@ import { Home, MapPin, FileText, Users, Settings as SettingsIcon, ShieldAlert } 
 import type { ReactNode } from "react";
 
 type Tab = {
-  to: "/" | "/location" | "/incidents" | "/contacts" | "/settings";
+  to: "/app" | "/location" | "/incidents" | "/contacts" | "/settings";
   label: string;
   icon: typeof Home;
 };
 
 const TABS: Tab[] = [
-  { to: "/", label: "Início", icon: Home },
+  { to: "/app", label: "Início", icon: Home },
   { to: "/location", label: "Localização", icon: MapPin },
   { to: "/incidents", label: "Ocorrências", icon: FileText },
   { to: "/contacts", label: "Contatos", icon: Users },
