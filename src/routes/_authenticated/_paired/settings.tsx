@@ -18,6 +18,25 @@ export const Route = createFileRoute("/_authenticated/_paired/settings")({
 function SettingsPage() {
   const [settings, setSettings] = useSettings();
   const [device] = useDevice();
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState<{ full_name: string; email: string } | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("profiles")
+      .select("full_name, email")
+      .eq("id", user.id)
+      .maybeSingle()
+      .then(({ data }) => data && setProfile(data));
+  }, [user]);
+
+  const handleSignOut = async () => {
+    await signOut();
+    toast.success("Você saiu da conta");
+    navigate({ to: "/welcome", replace: true });
+  };
 
   const Row = ({
     icon,
