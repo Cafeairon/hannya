@@ -1,35 +1,40 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { useDevice, useLocations, useSosEvents, uid } from "@/lib/storage";
 import {
-  Bluetooth,
+  useDevice,
+  useLocations,
+  useSosEvents,
+  useContacts,
+  useIncidents,
+  uid,
+} from "@/lib/storage";
+import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
+import {
   BatteryFull,
-  Sun,
-  KeyRound,
-  Radio,
-  Sparkles,
   CheckCircle2,
   XCircle,
   Loader2,
   ShieldAlert,
   MapPin,
-  RefreshCw,
-  BookOpen,
+  Phone,
+  Radio,
+  ChevronRight,
+  FileText,
 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/_paired/app")({
   head: () => ({
     meta: [
-      { title: "SafeHer — Segurança feminina urbana" },
+      { title: "Hannya — Início" },
       {
         name: "description",
         content:
-          "SafeHer conecta seu dispositivo físico de segurança (gloss + chaveiros) com rastreio contínuo e SOS externo ao app.",
+          "Hannya conecta seu dispositivo físico de rastreio e botão SOS, mantendo proteção contínua e acesso rápido em emergências.",
       },
     ],
   }),
@@ -37,21 +42,36 @@ export const Route = createFileRoute("/_authenticated/_paired/app")({
 });
 
 function Home() {
+  const { user } = useAuth();
   const [device, setDevice] = useDevice();
-  const [, setLocations] = useLocations();
+  const [locations, setLocations] = useLocations();
   const [sos, setSos] = useSosEvents();
-  const [code, setCode] = useState(device.trackingCode ?? "");
+  const [contacts] = useContacts();
+  const [incidents] = useIncidents();
+  const [firstName, setFirstName] = useState<string | null>(null);
 
   const connected = device.status === "connected";
+  const lastPoint = locations[locations.length - 1];
 
-  // Sincronização contínua simulada quando conectado
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data?.full_name) setFirstName(data.full_name.split(" ")[0]);
+      });
+  }, [user]);
+
+  // Simulação leve de rastreio em tempo real quando conectado.
   useEffect(() => {
     if (!connected) return;
     const id = setInterval(() => {
       setDevice((d) => ({
         ...d,
         lastSync: Date.now(),
-        // Carga solar lenta (+1 a cada ciclo, máx 100)
         battery: d.solarCharging ? Math.min(100, d.battery + 1) : d.battery,
       }));
       setLocations((arr) => {
@@ -64,34 +84,18 @@ function Home() {
     return () => clearInterval(id);
   }, [connected, setDevice, setLocations]);
 
-  const connect = () => {
-    if (!code.trim()) return;
-    setDevice((d) => ({ ...d, trackingCode: code.trim(), status: "searching" }));
-    setTimeout(() => {
-      setDevice((d) => ({
-        ...d,
-        status: "connected",
-        battery: 78,
-        solarCharging: true,
-        lastSync: Date.now(),
-        components: { gloss: true, tracker: true, sos: true },
-      }));
-      toast.success("Dispositivo SafeHer conectado");
-    }, 1600);
-  };
+  const activeSos = sos.find((s) => !s.resolved);
 
-  const reconnect = () => {
-    setDevice((d) => ({ ...d, status: "searching" }));
-    setTimeout(() => {
-      setDevice((d) => ({ ...d, status: "connected", lastSync: Date.now() }));
-    }, 1200);
-  };
+  const greeting = useMemo(() => {
+    const h = new Date().getHours();
+    if (h < 5) return "Boa madrugada";
+    if (h < 12) return "Bom dia";
+    if (h < 18) return "Boa tarde";
+    return "Boa noite";
+  }, []);
 
-  const disconnect = () => {
-    setDevice((d) => ({ ...d, status: "disconnected" }));
-  };
+  const topContact = contacts.slice().sort((a, b) => a.priority - b.priority)[0];
 
-  // Simula um botão SOS físico (apenas para demonstração)
   const simulateDeviceSos = () => {
     setSos((arr) => [
       ...arr,
@@ -100,23 +104,22 @@ function Home() {
     toast.error("SOS recebido do dispositivo físico");
   };
 
-  const activeSos = sos.find((s) => !s.resolved);
-
   return (
     <AppShell
-      title="Olá 👋"
-      subtitle="Seu dispositivo SafeHer é o seu principal escudo. O app monitora e complementa."
+      title={firstName ? `${greeting}, ${firstName}` : greeting}
+      subtitle="Você está protegida. Tudo à mão de um toque."
     >
+      {/* Alerta SOS ativo */}
       {activeSos ? (
-        <Card className="p-4 rounded-3xl border-destructive/40 bg-destructive/10">
+        <Card className="p-4 rounded-3xl border-primary/40 bg-primary/10 mb-4">
           <div className="flex items-center gap-3">
-            <div className="size-11 rounded-2xl bg-destructive text-destructive-foreground grid place-items-center animate-pulse">
+            <div className="size-11 rounded-2xl bg-primary text-primary-foreground grid place-items-center animate-pulse">
               <ShieldAlert className="size-5" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-semibold text-destructive">SOS ATIVO</p>
-              <p className="text-xs text-destructive/80">
-                Acionado pelo botão físico · contatos e localização notificados
+              <p className="text-sm font-semibold text-primary">SOS ATIVO</p>
+              <p className="text-xs text-primary/80">
+                Acionado pelo botão físico · contatos notificados
               </p>
             </div>
             <Button
@@ -134,122 +137,108 @@ function Home() {
         </Card>
       ) : null}
 
-      {/* Status do dispositivo físico */}
-      <Card className={`${activeSos ? "mt-4" : ""} p-5 rounded-3xl border-border/60 shadow-sm`}>
+      {/* Cartão principal: rastreador */}
+      <Card className="p-5 rounded-3xl border-border/60 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="size-11 rounded-2xl bg-primary/10 grid place-items-center">
-              <Bluetooth className="size-5 text-primary" aria-hidden />
+            <div className="size-11 rounded-2xl bg-primary/15 text-primary grid place-items-center">
+              <Radio className="size-5" />
             </div>
             <div>
-              <p className="text-sm font-medium">Dispositivo SafeHer</p>
+              <p className="text-sm font-medium">Rastreador</p>
               <StatusBadge status={device.status} />
             </div>
           </div>
           <div className="text-right">
             <div className="flex items-center gap-1 text-sm font-medium justify-end">
-              <BatteryFull className="size-4 text-primary" aria-hidden />
+              <BatteryFull className="size-4 text-primary" />
               {connected ? `${device.battery}%` : "—"}
             </div>
-            <p className="text-[11px] text-muted-foreground flex items-center gap-1 justify-end">
-              <Sun className="size-3 text-amber-500" />
-              {device.solarCharging && connected ? "carga solar ativa" : "bateria"}
+            <p className="text-[11px] text-muted-foreground">
+              {device.lastSync
+                ? `Sinc. ${new Date(device.lastSync).toLocaleTimeString("pt-BR", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}`
+                : "sem sincronia"}
             </p>
           </div>
         </div>
-
-        {device.trackingCode ? (
-          <p className="mt-4 text-xs text-muted-foreground">
-            Código: <span className="font-mono">{device.trackingCode}</span>
-          </p>
-        ) : null}
-
-        {device.status === "disconnected" ? (
-          <div className="mt-4 space-y-2">
-            <label htmlFor="code" className="text-xs text-muted-foreground">
-              Número de rastreio do dispositivo
-            </label>
-            <div className="flex gap-2">
-              <Input
-                id="code"
-                placeholder="Ex.: SH-2840-91"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                className="h-12"
-              />
-              <Button onClick={connect} className="h-12 px-5">
-                Conectar
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <div className="mt-4 flex gap-2">
-            <Button
-              variant="secondary"
-              onClick={reconnect}
-              className="flex-1 h-11"
-              disabled={device.status === "searching"}
-            >
-              <RefreshCw className="size-4" />
-              Reconectar
-            </Button>
-            <Button variant="outline" onClick={disconnect} className="h-11">
-              Desconectar
-            </Button>
-          </div>
-        )}
       </Card>
 
-      {/* Componentes do kit */}
-      <div className="mt-4 grid grid-cols-3 gap-3">
-        <ComponentTile
-          icon={<Sparkles className="size-5" />}
-          label="Gloss"
-          paired={device.components.gloss && connected}
-        />
-        <ComponentTile
-          icon={<Radio className="size-5" />}
-          label="Rastreador"
-          paired={device.components.tracker && connected}
-        />
-        <ComponentTile
-          icon={<KeyRound className="size-5" />}
-          label="Botão SOS"
-          paired={device.components.sos && connected}
-        />
-      </div>
+      {/* Localização em tempo real */}
+      <Link to="/location" className="block mt-3">
+        <Card className="p-4 rounded-3xl border-border/60 flex items-center gap-3">
+          <div className="size-11 rounded-2xl bg-primary/15 text-primary grid place-items-center">
+            <MapPin className="size-5" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium">Localização em tempo real</p>
+            <p className="text-xs text-muted-foreground truncate">
+              {lastPoint
+                ? `${lastPoint.lat.toFixed(4)}, ${lastPoint.lng.toFixed(4)}`
+                : "aguardando primeiro sinal"}
+            </p>
+          </div>
+          <ChevronRight className="size-4 text-muted-foreground" />
+        </Card>
+      </Link>
 
-      <p className="mt-3 text-[11px] text-muted-foreground text-center">
-        O botão SOS funciona <strong>sem o celular</strong>. GPS sempre ativo.
+      {/* Contato rápido */}
+      <Card className="p-4 rounded-3xl border-border/60 mt-3">
+        <div className="flex items-center gap-3">
+          <div className="size-11 rounded-2xl bg-primary/15 text-primary grid place-items-center">
+            <Phone className="size-5" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium">Contato de emergência</p>
+            <p className="text-xs text-muted-foreground truncate">
+              {topContact ? `${topContact.name} · ${topContact.relation}` : "Nenhum contato cadastrado"}
+            </p>
+          </div>
+          {topContact ? (
+            <a href={`tel:${topContact.phone}`}>
+              <Button size="sm" className="h-9 rounded-xl">
+                Ligar
+              </Button>
+            </a>
+          ) : (
+            <Link to="/contacts">
+              <Button size="sm" variant="outline" className="h-9 rounded-xl">
+                Adicionar
+              </Button>
+            </Link>
+          )}
+        </div>
+      </Card>
+
+      {/* Histórico */}
+      <Link to="/incidents" className="block mt-3">
+        <Card className="p-4 rounded-3xl border-border/60 flex items-center gap-3">
+          <div className="size-11 rounded-2xl bg-primary/15 text-primary grid place-items-center">
+            <FileText className="size-5" />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-medium">Histórico de ocorrências</p>
+            <p className="text-xs text-muted-foreground">
+              {incidents.length} {incidents.length === 1 ? "registro" : "registros"}
+            </p>
+          </div>
+          <ChevronRight className="size-4 text-muted-foreground" />
+        </Card>
+      </Link>
+
+      {/* Botão de emergência discreto */}
+      <button
+        onClick={simulateDeviceSos}
+        disabled={!!activeSos}
+        className="mt-6 w-full h-12 rounded-2xl border border-primary/40 text-primary text-sm font-medium hover:bg-primary/5 transition-colors disabled:opacity-50"
+      >
+        Emergência discreta
+      </button>
+      <p className="mt-2 text-[11px] text-muted-foreground text-center">
+        Em risco imediato, use o botão SOS físico no chaveiro — funciona sem o celular.
       </p>
-
-      {/* Atalhos */}
-      <div className="mt-4 grid grid-cols-2 gap-3">
-        <Link to="/location">
-          <Card className="p-4 rounded-2xl border-border/60 h-full">
-            <MapPin className="size-5 text-primary" />
-            <p className="text-sm font-semibold mt-2">Localização em tempo real</p>
-            <p className="text-xs text-muted-foreground">Ver mapa e histórico</p>
-          </Card>
-        </Link>
-        <Link to="/incidents">
-          <Card className="p-4 rounded-2xl border-border/60 h-full">
-            <BookOpen className="size-5 text-primary" />
-            <p className="text-sm font-semibold mt-2">Registrar ocorrência</p>
-            <p className="text-xs text-muted-foreground">Relato com data e local</p>
-          </Card>
-        </Link>
-      </div>
-
-      {/* Simulador do botão físico (apenas para demonstração no protótipo) */}
-      {connected && !activeSos ? (
-        <button
-          onClick={simulateDeviceSos}
-          className="mt-4 w-full text-[11px] text-muted-foreground underline underline-offset-2"
-        >
-          Simular acionamento do botão SOS físico (protótipo)
-        </button>
-      ) : null}
     </AppShell>
   );
 }
@@ -257,45 +246,19 @@ function Home() {
 function StatusBadge({ status }: { status: "disconnected" | "searching" | "connected" }) {
   if (status === "connected")
     return (
-      <p className="flex items-center gap-1 text-xs text-emerald-600">
+      <p className="flex items-center gap-1 text-xs text-primary">
         <CheckCircle2 className="size-3.5" /> Conectado
       </p>
     );
   if (status === "searching")
     return (
-      <p className="flex items-center gap-1 text-xs text-amber-600">
-        <Loader2 className="size-3.5 animate-spin" /> Procurando dispositivo…
+      <p className="flex items-center gap-1 text-xs text-muted-foreground">
+        <Loader2 className="size-3.5 animate-spin" /> Procurando…
       </p>
     );
   return (
     <p className="flex items-center gap-1 text-xs text-muted-foreground">
       <XCircle className="size-3.5" /> Desconectado
     </p>
-  );
-}
-
-function ComponentTile({
-  icon,
-  label,
-  paired,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  paired: boolean;
-}) {
-  return (
-    <Card className="p-3 rounded-2xl border-border/60 text-center">
-      <div
-        className={`mx-auto size-10 rounded-2xl grid place-items-center ${
-          paired ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
-        }`}
-      >
-        {icon}
-      </div>
-      <p className="mt-2 text-xs font-medium">{label}</p>
-      <p className={`text-[10px] ${paired ? "text-emerald-600" : "text-muted-foreground"}`}>
-        {paired ? "pareado" : "—"}
-      </p>
-    </Card>
   );
 }

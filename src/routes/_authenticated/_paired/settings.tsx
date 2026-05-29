@@ -11,7 +11,7 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/_paired/settings")({
-  head: () => ({ meta: [{ title: "Ajustes — SafeHer" }] }),
+  head: () => ({ meta: [{ title: "Ajustes — Hannya" }] }),
   component: SettingsPage,
 });
 
@@ -160,10 +160,10 @@ function SettingsPage() {
             <Info className="size-5" />
           </div>
           <div>
-            <p className="text-sm font-medium">Sobre o SafeHer</p>
+            <p className="text-sm font-medium">Sobre o Hannya</p>
             <p className="text-xs text-muted-foreground">
-              Ecossistema de segurança feminina: app + gloss + chaveiro rastreador +
-              botão SOS. Dispositivo: {device.trackingCode ?? "não pareado"}.
+              Ecossistema de segurança feminina: app + chaveiro rastreador + botão SOS físico.
+              Dispositivo: {device.trackingCode ?? "não pareado"}.
             </p>
           </div>
         </div>

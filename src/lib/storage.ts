@@ -9,7 +9,7 @@ export type Contact = {
   priority: number;
 };
 
-export type DeviceComponent = "gloss" | "tracker" | "sos";
+export type DeviceComponent = "tracker" | "sos";
 
 export type DeviceState = {
   trackingCode: string | null;
@@ -104,7 +104,7 @@ export const useDevice = () =>
     battery: 0,
     solarCharging: false,
     lastSync: null,
-    components: { gloss: false, tracker: false, sos: false },
+    components: { tracker: false, sos: false },
   });
 
 export const useContacts = () => usePersistent<Contact[]>(KEYS.contacts, []);
