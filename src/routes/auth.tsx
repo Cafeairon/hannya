@@ -2,7 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { ShieldAlert, ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { HannyaLogo } from "@/components/brand/HannyaLogo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,7 +15,7 @@ export const Route = createFileRoute("/auth")({
   validateSearch: (s: Record<string, unknown>) => ({
     mode: (s.mode === "signup" ? "signup" : "login") as "login" | "signup",
   }),
-  head: () => ({ meta: [{ title: "Entrar — SafeHer" }] }),
+  head: () => ({ meta: [{ title: "Entrar — Hannya" }] }),
   component: AuthPage,
 });
 
@@ -52,11 +53,11 @@ function AuthPage() {
         <ArrowLeft className="size-4" /> Voltar
       </Link>
       <div className="flex items-center gap-3 mb-6">
-        <div className="size-12 rounded-2xl bg-primary/15 grid place-items-center">
-          <ShieldAlert className="size-6 text-primary" />
+        <div className="size-12 rounded-2xl bg-primary text-primary-foreground grid place-items-center">
+          <HannyaLogo className="size-7" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Bem-vinda ao SafeHer</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Bem-vinda ao Hannya</h1>
           <p className="text-sm text-muted-foreground">Sua segurança é nossa prioridade</p>
         </div>
       </div>

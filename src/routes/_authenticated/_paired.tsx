@@ -35,7 +35,7 @@ function PairedGuard() {
           battery: d.battery || data.battery || 80,
           solarCharging: true,
           lastSync: d.lastSync ?? Date.now(),
-          components: { gloss: true, tracker: true, sos: true },
+          components: { tracker: true, sos: true },
         }));
         setOk(true);
       });
