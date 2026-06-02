@@ -251,3 +251,45 @@ function StatusBadge({ status }: { status: "disconnected" | "searching" | "conne
     </p>
   );
 }
+
+function DeviceCard({
+  icon,
+  label,
+  status,
+  battery,
+  lastSync,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  status: "disconnected" | "searching" | "connected";
+  battery: number | null;
+  lastSync: number | null;
+}) {
+  return (
+    <Card className="p-4 rounded-3xl border-border/60 shadow-sm">
+      <div className="flex items-center gap-2">
+        <div className="size-9 rounded-xl bg-primary/15 text-primary grid place-items-center">
+          {icon}
+        </div>
+        <p className="text-sm font-medium">{label}</p>
+      </div>
+      <div className="mt-3 flex items-end justify-between">
+        <div>
+          <div className="flex items-center gap-1 text-lg font-semibold">
+            <BatteryFull className="size-4 text-primary" />
+            {battery !== null ? `${battery}%` : "—"}
+          </div>
+          <StatusBadge status={status} />
+        </div>
+        <p className="text-[10px] text-muted-foreground text-right leading-tight">
+          {lastSync
+            ? `sinc.\n${new Date(lastSync).toLocaleTimeString("pt-BR", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}`
+            : "sem sincronia"}
+        </p>
+      </div>
+    </Card>
+  );
+}
