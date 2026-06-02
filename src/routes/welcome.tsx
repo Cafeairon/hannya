@@ -29,8 +29,8 @@ function Welcome() {
 
   return (
     <div className="relative min-h-screen flex flex-col px-6 py-10 bg-background overflow-hidden">
-      <Peony className="pointer-events-none absolute -top-10 -right-12 size-64 text-primary/10" />
-      <Peony className="pointer-events-none absolute bottom-32 -left-16 size-56 text-primary/[0.08]" />
+      <Peony className="pointer-events-none absolute -top-10 -right-12 size-64 text-primary/25" />
+      <Peony className="pointer-events-none absolute bottom-32 -left-16 size-56 text-primary/20" />
 
       <div className="relative flex-1 flex flex-col items-center justify-center text-center">
         <div className="size-28 rounded-[2rem] bg-primary grid place-items-center shadow-lg overflow-hidden">
