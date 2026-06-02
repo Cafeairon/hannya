@@ -137,34 +137,23 @@ function Home() {
         </Card>
       ) : null}
 
-      {/* Cartão principal: rastreador */}
-      <Card className="p-5 rounded-3xl border-border/60 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="size-11 rounded-2xl bg-primary/15 text-primary grid place-items-center">
-              <Radio className="size-5" />
-            </div>
-            <div>
-              <p className="text-sm font-medium">Rastreador</p>
-              <StatusBadge status={device.status} />
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="flex items-center gap-1 text-sm font-medium justify-end">
-              <BatteryFull className="size-4 text-primary" />
-              {connected ? `${device.battery}%` : "—"}
-            </div>
-            <p className="text-[11px] text-muted-foreground">
-              {device.lastSync
-                ? `Sinc. ${new Date(device.lastSync).toLocaleTimeString("pt-BR", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}`
-                : "sem sincronia"}
-            </p>
-          </div>
-        </div>
-      </Card>
+      {/* Cartões de status dos dispositivos */}
+      <div className="grid grid-cols-2 gap-3">
+        <DeviceCard
+          icon={<Radio className="size-5" />}
+          label="Rastreador"
+          status={device.status}
+          battery={connected ? device.battery : null}
+          lastSync={device.lastSync}
+        />
+        <DeviceCard
+          icon={<ShieldAlert className="size-5" />}
+          label="Botão SOS"
+          status={device.status}
+          battery={connected ? device.sosBattery : null}
+          lastSync={device.lastSync}
+        />
+      </div>
 
       {/* Localização em tempo real */}
       <Link to="/location" className="block mt-3">
@@ -260,5 +249,47 @@ function StatusBadge({ status }: { status: "disconnected" | "searching" | "conne
     <p className="flex items-center gap-1 text-xs text-muted-foreground">
       <XCircle className="size-3.5" /> Desconectado
     </p>
+  );
+}
+
+function DeviceCard({
+  icon,
+  label,
+  status,
+  battery,
+  lastSync,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  status: "disconnected" | "searching" | "connected";
+  battery: number | null;
+  lastSync: number | null;
+}) {
+  return (
+    <Card className="p-4 rounded-3xl border-border/60 shadow-sm">
+      <div className="flex items-center gap-2">
+        <div className="size-9 rounded-xl bg-primary/15 text-primary grid place-items-center">
+          {icon}
+        </div>
+        <p className="text-sm font-medium">{label}</p>
+      </div>
+      <div className="mt-3 flex items-end justify-between">
+        <div>
+          <div className="flex items-center gap-1 text-lg font-semibold">
+            <BatteryFull className="size-4 text-primary" />
+            {battery !== null ? `${battery}%` : "—"}
+          </div>
+          <StatusBadge status={status} />
+        </div>
+        <p className="text-[10px] text-muted-foreground text-right leading-tight">
+          {lastSync
+            ? `sinc.\n${new Date(lastSync).toLocaleTimeString("pt-BR", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}`
+            : "sem sincronia"}
+        </p>
+      </div>
+    </Card>
   );
 }

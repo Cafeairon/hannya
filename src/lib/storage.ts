@@ -14,7 +14,8 @@ export type DeviceComponent = "tracker" | "sos";
 export type DeviceState = {
   trackingCode: string | null;
   status: "disconnected" | "searching" | "connected";
-  battery: number; // 0-100
+  battery: number; // bateria do rastreador 0-100
+  sosBattery: number; // bateria do chaveiro SOS 0-100
   solarCharging: boolean;
   lastSync: number | null;
   components: Record<DeviceComponent, boolean>; // pareados
@@ -102,6 +103,7 @@ export const useDevice = () =>
     trackingCode: null,
     status: "disconnected",
     battery: 0,
+    sosBattery: 0,
     solarCharging: false,
     lastSync: null,
     components: { tracker: false, sos: false },

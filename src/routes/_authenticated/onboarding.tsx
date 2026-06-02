@@ -60,6 +60,7 @@ function Onboarding() {
       trackingCode: c,
       status: "connected",
       battery: 82,
+      sosBattery: 95,
       solarCharging: true,
       lastSync: Date.now(),
       components: { tracker: true, sos: true },

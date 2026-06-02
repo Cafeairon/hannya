@@ -33,6 +33,7 @@ function PairedGuard() {
           trackingCode: data.tracking_code,
           status: "connected",
           battery: d.battery || data.battery || 80,
+          sosBattery: d.sosBattery || 95,
           solarCharging: true,
           lastSync: d.lastSync ?? Date.now(),
           components: { tracker: true, sos: true },
