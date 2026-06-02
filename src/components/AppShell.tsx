@@ -37,9 +37,7 @@ export function AppShell({
 
       <header className="relative px-5 pt-8 pb-4">
         <div className="flex items-center gap-3">
-          <div className="size-10 rounded-2xl bg-primary text-primary-foreground grid place-items-center shadow-sm">
-            <HannyaLogo className="size-6" />
-          </div>
+          <HannyaLogo className="size-10 rounded-2xl shadow-sm" />
           <div>
             <p className="text-[11px] uppercase tracking-[0.18em] text-primary/80 leading-none">
               Hannya

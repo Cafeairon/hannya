@@ -33,9 +33,7 @@ function Welcome() {
       <Peony className="pointer-events-none absolute bottom-32 -left-16 size-56 text-primary/[0.08]" />
 
       <div className="relative flex-1 flex flex-col items-center justify-center text-center">
-        <div className="size-24 rounded-[2rem] bg-primary text-primary-foreground grid place-items-center shadow-lg">
-          <HannyaLogo className="size-14" />
-        </div>
+        <HannyaLogo className="size-28 rounded-[2rem] shadow-lg" />
         <p className="mt-6 text-[11px] uppercase tracking-[0.28em] text-primary/80">
           Proteção · Força · Vigilância
         </p>
