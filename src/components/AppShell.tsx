@@ -32,12 +32,14 @@ export function AppShell({
   return (
     <div className="relative min-h-screen bg-background text-foreground flex flex-col overflow-hidden">
       {/* Peônias decorativas discretas */}
-      <Peony className="pointer-events-none absolute -top-6 -right-6 size-36 text-primary/10" />
-      <Peony className="pointer-events-none absolute top-1/2 -left-10 size-32 text-primary/[0.06]" />
+      <Peony className="pointer-events-none absolute -top-6 -right-6 size-36 text-primary/25" />
+      <Peony className="pointer-events-none absolute top-1/2 -left-10 size-32 text-primary/20" />
 
       <header className="relative px-5 pt-8 pb-4">
         <div className="flex items-center gap-3">
-          <HannyaLogo className="size-10 rounded-2xl shadow-sm" />
+          <div className="size-10 rounded-2xl bg-primary grid place-items-center shadow-sm overflow-hidden">
+            <HannyaLogo className="size-9" />
+          </div>
           <div>
             <p className="text-[11px] uppercase tracking-[0.18em] text-primary/80 leading-none">
               Hannya
