@@ -1,7 +1,7 @@
-import logoAsset from "@/assets/hannya-logo.svg.asset.json";
+import logoAsset from "@/assets/hannya-logo.png.asset.json";
 
 /**
- * Logo Hannya — imagem oficial da marca.
+ * Logo Hannya — ícone oficial da marca (máscara dourada sobre fundo vermelho).
  */
 export function HannyaLogo({
   className = "",
