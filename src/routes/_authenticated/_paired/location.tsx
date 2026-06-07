@@ -63,17 +63,6 @@ function LocationPage() {
           />
 
           <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full z-10 pointer-events-none" preserveAspectRatio="none">
-            {path && (
-              <path
-                d={path}
-                fill="none"
-                stroke="var(--primary)"
-                strokeWidth="0.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                opacity="0.7"
-              />
-            )}
             {last ? (
               <circle cx={50} cy={50} r="2" fill="var(--primary)">
                 <animate attributeName="r" values="2;5;2" dur="2s" repeatCount="indefinite" />
