@@ -78,10 +78,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Ecossistema de proteção feminina urbana: app + dispositivo físico discreto com botão SOS independente." },
       { name: "author", content: "Hannya" },
       { property: "og:title", content: "Hannya — Segurança feminina" },
-      { property: "og:description", content: "Ecossistema de proteção feminina urbana com botão SOS físico independente do celular." },
+      { property: "og:description", content: "Ecossistema de proteção feminina urbana: app + dispositivo físico discreto com botão SOS independente." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Hannya — Segurança feminina" },
+      { name: "twitter:description", content: "Ecossistema de proteção feminina urbana: app + dispositivo físico discreto com botão SOS independente." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/02bd0130-71be-421f-967e-420edf4a5138/id-preview-3dadbf6b--ce575083-95e4-4faf-873d-6f352c54cfee.lovable.app-1780853695106.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/02bd0130-71be-421f-967e-420edf4a5138/id-preview-3dadbf6b--ce575083-95e4-4faf-873d-6f352c54cfee.lovable.app-1780853695106.png" },
     ],
     links: [
       {
