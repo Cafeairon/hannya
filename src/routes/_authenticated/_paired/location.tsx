@@ -51,8 +51,18 @@ function LocationPage() {
       subtitle="Rastreamento contínuo direto do dispositivo, mesmo com o app fechado."
     >
       <Card className="p-0 rounded-3xl overflow-hidden border-border/60">
-        <div className="relative h-56 bg-gradient-to-br from-accent via-secondary to-primary/20">
-          <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
+        <div className="relative h-56 bg-accent overflow-hidden">
+          {/* Mapa Visual Simplificado ao fundo */}
+          <iframe
+            title="Mapa"
+            className="absolute inset-0 w-full h-full opacity-40 mix-blend-luminosity pointer-events-none"
+            src={`https://www.openstreetmap.org/export/embed.html?bbox=${last
+              ? `${last.lng - 0.005},${last.lat - 0.005},${last.lng + 0.005},${last.lat + 0.005}`
+              : "-46.64,-23.55,-46.62,-23.53"
+              }&layer=mapnik`}
+          />
+
+          <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full z-10 pointer-events-none" preserveAspectRatio="none">
             {path && (
               <path
                 d={path}
@@ -64,17 +74,20 @@ function LocationPage() {
                 opacity="0.7"
               />
             )}
-            {last && (
+            {last ? (
               <circle cx={50} cy={50} r="2" fill="var(--primary)">
                 <animate attributeName="r" values="2;5;2" dur="2s" repeatCount="indefinite" />
               </circle>
+            ) : (
+              <circle cx={50} cy={50} r="2" fill="currentColor" className="text-muted-foreground/50">
+                <animate attributeName="r" values="2;4;2" dur="3s" repeatCount="indefinite" />
+              </circle>
             )}
           </svg>
-          <div className="absolute top-3 left-3 flex items-center gap-2 px-3 py-1.5 rounded-full bg-card/90 text-xs font-medium shadow">
+          <div className="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full bg-card/90 text-xs font-medium shadow">
             <span
-              className={`size-2 rounded-full ${
-                connected ? "bg-emerald-500 animate-pulse" : "bg-muted-foreground"
-              }`}
+              className={`size-2 rounded-full ${connected ? "bg-emerald-500 animate-pulse" : "bg-muted-foreground"
+                }`}
             />
             {connected ? "ao vivo" : "offline"}
           </div>
