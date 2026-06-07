@@ -37,7 +37,7 @@ export function AppShell({
 
       <header className="relative px-5 pt-8 pb-4">
         <div className="flex items-center gap-3">
-          <div className="size-10 rounded-2xl bg-primary shadow-sm overflow-hidden">
+          <div className="bg-primary shadow-sm overflow-hidden">
             <HannyaLogo className="size-full object-cover" />
           </div>
           <div>
@@ -65,15 +65,13 @@ export function AppShell({
               <li key={to}>
                 <Link
                   to={to}
-                  className={`flex flex-col items-center justify-center gap-1 py-3 text-[11px] font-medium transition-colors ${
-                    active ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                  }`}
+                  className={`flex flex-col items-center justify-center gap-1 py-3 text-[11px] font-medium transition-colors ${active ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                    }`}
                   aria-label={label}
                 >
                   <span
-                    className={`grid place-items-center size-9 rounded-full ${
-                      active ? "bg-primary/15" : ""
-                    }`}
+                    className={`grid place-items-center size-9 rounded-full ${active ? "bg-primary/15" : ""
+                      }`}
                   >
                     <Icon className="size-5" aria-hidden />
                   </span>
