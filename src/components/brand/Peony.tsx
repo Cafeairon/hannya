@@ -57,9 +57,9 @@ export function Peony({ className = "" }: { className?: string; filled?: boolean
 export function PeonyField({ className = "" }: { className?: string }) {
   return (
     <div className={`pointer-events-none select-none ${className}`} aria-hidden>
-      <Peony className="absolute -top-6 -right-4 size-28 text-pink/25" />
-      <Peony className="absolute top-32 -left-8 size-24 text-pink/20" />
-      <Peony className="absolute bottom-10 right-2 size-20 text-pink/20" />
+      <Peony className="absolute -top-6 -right-4 size-28 text-primary/25" />
+      <Peony className="absolute top-32 -left-8 size-24 text-primary/20" />
+      <Peony className="absolute bottom-10 right-2 size-20 text-primary/20" />
     </div>
   );
 }
