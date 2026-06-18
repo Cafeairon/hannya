@@ -32,8 +32,8 @@ export function AppShell({
   return (
     <div className="relative min-h-screen bg-background text-foreground flex flex-col overflow-hidden">
       {/* Peônias decorativas discretas */}
-      <Peony className="pointer-events-none absolute -top-6 -right-6 size-36 text-primary/25" />
-      <Peony className="pointer-events-none absolute top-1/2 -left-10 size-32 text-primary/20" />
+      <Peony className="pointer-events-none absolute -top-6 -right-6 size-36 text-pink/25" />
+      <Peony className="pointer-events-none absolute top-1/2 -left-10 size-32 text-pink/20" />
 
       <header className="relative px-5 pt-8 pb-4">
         <div className="flex items-center gap-3">
