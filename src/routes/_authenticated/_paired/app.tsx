@@ -124,7 +124,7 @@ function Home() {
             </div>
             <Button
               size="sm"
-              variant="outline"
+              variant="secondary"
               onClick={() =>
                 setSos((arr) =>
                   arr.map((s) => (s.id === activeSos.id ? { ...s, resolved: true } : s))
@@ -193,7 +193,7 @@ function Home() {
             </a>
           ) : (
             <Link to="/contacts">
-              <Button size="sm" variant="outline" className="h-9 rounded-xl">
+              <Button size="sm" variant="secondary" className="h-9 rounded-xl">
                 Adicionar
               </Button>
             </Link>
