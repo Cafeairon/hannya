@@ -124,7 +124,7 @@ function Home() {
             </div>
             <Button
               size="sm"
-              variant="outline"
+              variant="secondary"
               onClick={() =>
                 setSos((arr) =>
                   arr.map((s) => (s.id === activeSos.id ? { ...s, resolved: true } : s))
