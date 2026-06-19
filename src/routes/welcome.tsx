@@ -60,7 +60,7 @@ function Welcome() {
           </Button>
         </Link>
         <Link to="/auth" search={{ mode: "login" }}>
-          <Button size="lg" variant="outline" className="w-full h-14 text-base rounded-2xl border-primary/30 text-foreground">
+          <Button size="lg" variant="secondary" className="w-full h-14 text-base rounded-2xl">
             Já tenho conta
           </Button>
         </Link>
