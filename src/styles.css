@@ -54,40 +54,42 @@
 
 :root {
   --radius: 1rem;
-  /* Sand #ECD3AF */
-  --background: oklch(0.871 0.043 79);
+  /* Fundo neutro claro #FAFAFA */
+  --background: oklch(0.985 0 0);
   /* Grafite #1E1E1E */
   --foreground: oklch(0.234 0 0);
-  --card: oklch(0.93 0.028 80);
+  --card: oklch(1 0 0);
   --card-foreground: oklch(0.234 0 0);
-  --popover: oklch(0.93 0.028 80);
+  --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.234 0 0);
   /* Vermelho Hannya #8E1912 */
   --primary: oklch(0.42 0.153 29);
-  --primary-foreground: oklch(0.95 0.025 80);
-  --secondary: oklch(0.82 0.04 78);
+  --primary-foreground: oklch(0.97 0 0);
+  /* Rosa Hannya #ED90A1 (secundária) */
+  --secondary: oklch(0.77 0.11 17);
   --secondary-foreground: oklch(0.234 0 0);
-  --muted: oklch(0.84 0.035 79);
-  --muted-foreground: oklch(0.42 0.02 50);
-  --accent: oklch(0.78 0.05 75);
+  --muted: oklch(0.96 0.005 20);
+  --muted-foreground: oklch(0.5 0.01 20);
+  /* Accent = rosa suave para hovers/destaques delicados */
+  --accent: oklch(0.93 0.05 17);
   --accent-foreground: oklch(0.234 0 0);
   --destructive: oklch(0.42 0.153 29);
-  --destructive-foreground: oklch(0.95 0.025 80);
-  --border: oklch(0.74 0.04 75);
-  --input: oklch(0.92 0.03 80);
+  --destructive-foreground: oklch(0.97 0 0);
+  --border: oklch(0.9 0.005 20);
+  --input: oklch(0.94 0.005 20);
   --ring: oklch(0.42 0.153 29);
   --chart-1: oklch(0.42 0.153 29);
-  --chart-2: oklch(0.55 0.12 40);
+  --chart-2: oklch(0.77 0.11 17);
   --chart-3: oklch(0.7 0.08 70);
   --chart-4: oklch(0.42 0.02 50);
   --chart-5: oklch(0.234 0 0);
-  --sidebar: oklch(0.871 0.043 79);
+  --sidebar: oklch(1 0 0);
   --sidebar-foreground: oklch(0.234 0 0);
   --sidebar-primary: oklch(0.42 0.153 29);
-  --sidebar-primary-foreground: oklch(0.95 0.025 80);
-  --sidebar-accent: oklch(0.82 0.04 78);
+  --sidebar-primary-foreground: oklch(0.97 0 0);
+  --sidebar-accent: oklch(0.93 0.05 17);
   --sidebar-accent-foreground: oklch(0.234 0 0);
-  --sidebar-border: oklch(0.74 0.04 75);
+  --sidebar-border: oklch(0.9 0.005 20);
   --sidebar-ring: oklch(0.42 0.153 29);
 }
 
