@@ -53,9 +53,7 @@ function AuthPage() {
         <ArrowLeft className="size-4" /> Voltar
       </Link>
       <div className="flex items-center gap-3 mb-6">
-        <div className="size-12 rounded-2xl bg-primary shadow-sm overflow-hidden">
-          <HannyaLogo size="md" className="size-full" />
-        </div>
+        <HannyaLogo size="md" className="size-16" />
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Bem-vinda ao Hannya</h1>
           <p className="text-sm text-muted-foreground">Sua segurança é nossa prioridade</p>

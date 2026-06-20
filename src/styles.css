@@ -54,8 +54,8 @@
 
 :root {
   --radius: 1rem;
-  /* Fundo neutro claro #FAFAFA */
-  --background: oklch(0.985 0 0);
+  /* Fundo neutro claro #F9EFE5 */
+  --background: #F9EFE5;
   /* Grafite #1E1E1E */
   --foreground: oklch(0.234 0 0);
   --card: oklch(1 0 0);
