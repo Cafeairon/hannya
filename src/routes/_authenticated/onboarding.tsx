@@ -88,8 +88,8 @@ function Onboarding() {
   return (
     <div className="min-h-screen px-6 py-10 flex flex-col">
       <div className="flex items-center gap-3 mb-6">
-        <div className="size-12 rounded-2xl bg-primary text-primary-foreground grid place-items-center">
-          <HannyaLogo className="size-7" />
+        <div className="size-12 rounded-2xl bg-primary shadow-sm overflow-hidden">
+          <HannyaLogo size="md" className="size-full" />
         </div>
         <div>
           <p className="text-xs text-muted-foreground">Etapa 2 de 2</p>
