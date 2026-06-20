@@ -1,29 +1,15 @@
-## Contexto
-O componente `HannyaLogo` renderiza a mesma imagem em todas as telas, mas recebe tamanhos diferentes via `className`:
+## Objetivo
 
-- **Welcome** (`src/routes/welcome.tsx`): container `size-28` (112px), logo `size-full` + `object-cover`.
-- **Auth** (`src/routes/auth.tsx`): container `size-12` (48px), logo `size-7` (28px).
-- **Onboarding** (`src/routes/_authenticated/onboarding.tsx`): container `size-12` (48px), logo `size-7` (28px).
-- **AppShell** (`src/components/AppShell.tsx`): logo `size-16` (64px), sem container.
+O preview está servindo código antigo apesar de existirem commits novos no remoto. Vamos forçar a sincronização do sandbox com o último commit e reiniciar o dev server para que as alterações apareçam.
 
-A diferença é intencional de hierarquia visual, mas gera inconsistência. A falta de `object-cover` em alguns usos e tamanhos distintos pode deixar a marca com aparência desproporcional entre telas.
+## Passos
 
-## Proposta
-Padronizar o uso da logo com tamanhos semânticos e proporção consistente.
+1. Verificar o estado atual do repositório no sandbox (`git status`, `git log -1`, `git remote -v`) para confirmar qual commit está checado.
+2. Buscar e aplicar o último commit do remoto (`git fetch` + fast-forward para a branch ativa) usando o mecanismo interno do Lovable — git stateful commands são gerenciados pelo harness.
+3. Rodar `bun install` caso `package.json` / `bun.lock` tenham mudado, para garantir dependências alinhadas com o novo commit.
+4. Limpar o gate de HMR (`curl -X POST http://localhost:8080/__hmr_flush`) e, se necessário, reiniciar o dev server para invalidar módulos em cache.
+5. Abrir o preview e confirmar visualmente que as alterações do último commit estão presentes (cor, layout, ou qualquer mudança que o usuário mencionar).
 
-### Passos
-1. **Refinar o componente `HannyaLogo`** para aplicar sempre `object-cover` (ou `object-contain`) e expor variantes de tamanho internas (`sm`, `md`, `lg`, `xl`), mantendo o `className` customizável quando necessário.
-2. **Atualizar os pontos de uso** para adotar as variantes:
-   - `welcome.tsx`: usar `xl` (≈112px) como destaque de marca.
-   - `auth.tsx` e `onboarding.tsx`: usar `md` (≈48px) no container de título.
-   - `AppShell.tsx`: usar `lg` (≈64px) no header do app.
-3. **Revisar containers** para garantir que o fundo primário/redondo (`bg-primary`) e o alinhamento fiquem consistentes, sem duplicação de tamanho entre container e logo.
-4. **Verificar preview** nas rotas `/welcome`, `/auth`, `/onboarding` e `/app` para confirmar proporção e alinhamento.
+## Observação
 
-## Detalhes técnicos
-- Arquivo do componente: `src/components/brand/HannyaLogo.tsx`.
-- Arquivos de uso: `src/routes/welcome.tsx`, `src/routes/auth.tsx`, `src/routes/_authenticated/onboarding.tsx`, `src/components/AppShell.tsx`.
-- Nenhuma alteração de backend ou lógica de negócio — apenas apresentação e consistência visual.
-
-## Resultado esperado
-A logo Hannya aparece com tamanhos previsíveis por contexto, mantendo a proporção correta e alinhada, sem distorção ou variação abrupta entre telas.
+Como não posso rodar comandos git de estado (add/commit/pull/etc.) diretamente, a sincronização real do worktree depende do mecanismo interno do Lovable que reconcilia o sandbox com o remoto. Se após fetch o worktree ainda estiver desatualizado, vou reportar exatamente qual commit está local vs remoto para você decidir o próximo passo (ex.: forçar reset ou abrir um novo sandbox).
